@@ -125,8 +125,25 @@ function getFirstPromiseResult(promises) {
  * [Promise.resolve(1), Promise.resolve(2), Promise.resolve(3)] => Promise fulfilled with [1, 2, 3]
  * [Promise.resolve(1), Promise.reject(2), Promise.resolve(3)] => Promise rejected with 2
  */
-function getAllOrNothing(/* promises */) {
-  throw new Error('Not implemented');
+function getAllOrNothing(promises) {
+  const result = [];
+  let count = 0;
+  return new Promise((resolve, reject) => {
+    promises.forEach((elem) => {
+      elem.then(
+        (value) => {
+          result.push(value);
+          count += 1;
+          if (count === promises.length) {
+            resolve(result);
+          }
+        },
+        (reason) => {
+          reject(reason);
+        }
+      );
+    });
+  });
 }
 
 /**
